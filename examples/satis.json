@@ -1,0 +1,20 @@
+{
+    "name": "Satis",
+    "homepage": "https://satis.domain.tld",
+    "archive": {
+        "directory": "dist",
+        "format": "zip",
+        "skip-dev": true,
+	"checksum": false
+    },
+    "repositories": [
+        { "type": "composer", "url": "https://packagist.org" }
+    ],
+    "require": {
+
+        "symfony/symfony": "~2.5",
+        "sensio/distribution-bundle": "~3.0"
+
+    },
+    "require-dependencies": true
+}
