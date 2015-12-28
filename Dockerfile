@@ -31,7 +31,8 @@ RUN cd /opt \
 # Scripts bash satis
 COPY assets/bin /bin/satis/
 RUN chmod u+x /bin/satis/* \
-    && echo "0 * * * * root /bin/satis/launch.sh" >> /etc/crontab
+    && echo "* * * * * root /bin/satis/launch.sh" >> /etc/crontab \
+    && crontab /etc/crontab
 
 #Configure SSH
 RUN mkdir -p /root/.ssh \
@@ -44,4 +45,4 @@ WORKDIR /var/www
 EXPOSE 80
 EXPOSE 443
 
-CMD /bin/satis/launch.sh && /etc/init.d/cron start && nginx -c /etc/nginx/nginx.conf
+CMD /bin/satis/launch.sh && cron && nginx -c /etc/nginx/nginx.conf
