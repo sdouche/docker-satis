@@ -3,10 +3,13 @@ MAINTAINER seb@nmeos.net
 
 # Install PHP and Nginx
 RUN apt-get update -qq \
-    && apt-get install -qqy \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -qq \
+       build-essential \
+       cmake \
        curl \
        cron \
        git \
+       libboost-all-dev \
        php5-cli \
        php5-intl \
        php5-curl \
@@ -30,9 +33,15 @@ RUN cd /opt \
 
 # Scripts bash satis
 COPY assets/bin /bin/satis/
-RUN chmod u+x /bin/satis/* \
-    && echo "* * * * * root /bin/satis/launch.sh" >> /etc/crontab \
-    && crontab /etc/crontab
+RUN chmod u+x /bin/satis/* 
+
+# Install frequent-cron
+RUN git clone https://github.com/homer6/frequent-cron.git \
+    && cd frequent-cron \
+    && cmake . \
+    && make \
+    && ln -s ${PWD}/frequent-cron /usr/local/bin/frequent \
+    && chmod 755 frequent-cron
 
 #Configure SSH
 RUN mkdir -p /root/.ssh \
@@ -45,4 +54,4 @@ WORKDIR /var/www
 EXPOSE 80
 EXPOSE 443
 
-CMD /bin/satis/launch.sh && cron && nginx -c /etc/nginx/nginx.conf
+CMD /bin/satis/launch.sh && nginx -c /etc/nginx/nginx.conf
